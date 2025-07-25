@@ -10,9 +10,8 @@ A real-time vehicle detection and speed estimation system using **YOLO** model.
   <img src="/demo/output3.gif" width="250"/>
 </p>
 
-## Architecture 
 
-https://github.com/user-attachments/assets/67ee68e6-9de8-4d2d-b4d2-adc35fd6ef0a
+<!--https://github.com/user-attachments/assets/67ee68e6-9de8-4d2d-b4d2-adc35fd6ef0a-->
 
 
 <!--https://github.com/user-attachments/assets/3c293acc-7d77-46d1-8d23-f27892331525-->
@@ -27,12 +26,6 @@ https://github.com/user-attachments/assets/67ee68e6-9de8-4d2d-b4d2-adc35fd6ef0a
 
 
 ## Installation
-
-### Prerequisites
-- Python 3.7+
-- OpenCV 4.5+
-- NumPy
-- Matplotlib
 
 ### Setup
 
