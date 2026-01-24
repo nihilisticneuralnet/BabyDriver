@@ -453,3 +453,4 @@ class detect:
             print(f"\nComplete! Output: {output_path}")
             print(f"Frames processed: {frame_count}")
 
+
