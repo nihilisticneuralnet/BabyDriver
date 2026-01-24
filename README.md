@@ -1,29 +1,21 @@
-# BabyDriver: Real Time Vehicle Detection \& Speed Estimation
-
-A real-time vehicle detection and speed estimation system using **YOLO** model.
+# BabyDriver: Real Time Vehicle Detection & Speed Estimation
+A real-time vehicle detection and speed estimation system using **YOLO** model with **optical flow** tracking and **homography-based** speed calculation.
 
 ## Example Demo
-
 <p align="center">
   <img src="/demo/output1.gif" width="250"/>
   <img src="/demo/output2.gif" width="250"/>
   <img src="/demo/output3.gif" width="250"/>
 </p>
-
-
 <!--https://github.com/user-attachments/assets/67ee68e6-9de8-4d2d-b4d2-adc35fd6ef0a-->
-
-
 <!--https://github.com/user-attachments/assets/3c293acc-7d77-46d1-8d23-f27892331525-->
 
-
 ## Features
-
 - **Multi-Vehicle Detection**: Detects cars, motorcycles, buses, and trucks using YOLOv3
 - **Object Tracking**: Persistent tracking across frames with unique IDs
-- **Speed Estimation**: Real-time speed calculation in km/h with perspective correction
+- **Optical Flow Speed Estimation**: Lucas-Kanade optical flow within bounding boxes for accurate motion tracking
+- **Homography-Based Calculation**: Geometrically correct speed estimation using ground-plane projection
 - **Speed Violation Detection**: Visual alerts for vehicles exceeding 80 km/h
-
 
 ## Installation
 
@@ -73,30 +65,36 @@ Modify these parameters in `main.py` for your specific use case:
 confThreshold = 0.2        # Confidence threshold (0.1-0.9)
 nmsThreshold = 0.2         # Non-max suppression threshold
 
-# Speed calculation parameters
-PIXELS_PER_METER = 4       # Calibrate based on your video
-SPEED_MULTIPLIER = 6.0     # Fine-tune speed accuracy
-FPS = 30                   # Video frame rate
+# Optical flow parameters
+lk_params = dict(winSize=(21, 21), maxLevel=3, ...)
+feature_params = dict(maxCorners=50, qualityLevel=0.01, ...)
 
 # Input/Output
-input_video = "video.mkv"  # Input video path
-output_video = "output.mp4" # Output video path
+input_video = "video.mkv"      # Input video path
+output_video = "output.mp4"    # Output video path
+auto_calibrate = True          # Automatic vs manual homography
 ```
 
 ### Calibration Guide
 
-1. **PIXELS_PER_METER**: Measure a known distance in your video (e.g., lane width ≈ 3.5m)
+1. **Automatic Calibration** (Default):
    ```python
-   PIXELS_PER_METER = measured_pixels / known_meters
+   detector.processVideo("output.mp4", auto_calibrate=True)
    ```
+   Uses default road assumptions (10m × 15m rectangular area)
 
-2. **SPEED_MULTIPLIER**: Adjust based on ground truth or expected speeds
-   - Start with 1.0 and increase if speeds seem too low
-   - Typical range: 3.0-10.0 depending on camera setup
+2. **Manual Calibration** (Recommended for accuracy):
+   ```python
+   detector.processVideo("output.mp4", auto_calibrate=False)
+   ```
+   - Click 4 points on the road plane (e.g., corners of parking spot)
+   - Enter real-world coordinates in meters for each point
+   - System computes homography matrix automatically
 
 
-## Future Enhancements
 
-- [ ] **Other Algos**: DeepSORT or ByteTrack integration or Lucas-Kannade, etc for uniform speed estimation
+## What not worked
+
+- Farneback for object tracking was bad
 
 
