@@ -1,12 +1,14 @@
 import cv2
 import numpy as np
+import math
+import time
 import matplotlib
 matplotlib.use('Agg')
 from detect import detect
 
 cv2.setNumThreads(4)
 
-cap = cv2.VideoCapture(".mkv")
+cap = cv2.VideoCapture("*.mkv")
 input_size = 320
 
 confThreshold = 0.2
@@ -16,25 +18,33 @@ font_color = (0, 0, 255)
 font_size = 0.5
 font_thickness = 2
 
-PIXELS_PER_METER = 4
-FPS = 30
-SPEED_MULTIPLIER = 6.0
+FPS = 30 
 
 classesFile = "coco.names"
 classNames = open(classesFile).read().strip().split('\n')
-# len(classNames)
-
 required_class_index = [2, 3, 5, 7]
 
 detected_classNames = []
 
 modelConfiguration = 'yolov3-320.cfg'
 modelWeigheights = 'yolov3-320.weights'
-
 net = cv2.dnn.readNetFromDarknet(modelConfiguration, modelWeigheights)
-
 np.random.seed(42)
 colors = np.random.randint(0, 255, size=(len(classNames), 3), dtype='uint8')
+
+# Homography matrix H: image -> ground plane (meters)
+H_MATRIX = None
+
+# Lucas-Kanade optical flow parameters
+lk_params = dict(winSize=(21, 21),
+                 maxLevel=3,
+                 criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+
+# goodFeaturesToTrack parameters
+feature_params = dict(maxCorners=50,
+                      qualityLevel=0.01,
+                      minDistance=5,
+                      blockSize=7)
 
 
 def processVideo(output_path="output.mp4"):
@@ -101,4 +111,7 @@ def processVideo(output_path="output.mp4"):
         print(f"Total frames processed: {frame_count}")
 
 if __name__ == "__main__":
-    processVideo("output.mp4")
+    detector = detect()
+    # Set auto_calibrate=False for manual calibration
+    detector.processVideo("output.mp4", auto_calibrate=True)
+
