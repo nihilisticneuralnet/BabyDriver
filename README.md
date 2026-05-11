@@ -1,5 +1,3 @@
-  <img src="Gemini_Generated_Image.png" />
-
 # BabyDriver: Real Time Vehicle Detection & Speed Estimation
 A real-time vehicle detection and speed estimation system using **YOLO** model with **optical flow** tracking and **homography-based** speed calculation.
 
